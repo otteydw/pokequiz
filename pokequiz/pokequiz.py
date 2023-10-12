@@ -1,16 +1,21 @@
+import click
 import helpers
 
+# import sys
 
-def type_quiz(question_count=3, hints=False):
+
+def type_quiz(question_count=10, hints=False):
     correct = 0
+
     for _ in range(question_count):
         pokemon = helpers.random_pokemon()
 
-        pokemon_name = pokemon.name
+        pokemon_name = pokemon.name.replace("-", " ").title()
         pokemon_types = helpers.pokemon_types(pokemon)
         # print(f"Name: {pokemon_name} | Types: {pokemon_types}")
-
-        print(helpers.pokemon_type_list())
+        print()
+        # print(helpers.pokemon_type_list())
+        helpers.display_list_in_4_columns(helpers.pokemon_type_list())
         print()
         if hints:
             hint_text = f"Hint: it has {len(pokemon_types)} {helpers.simple_pluralize(pokemon_types, 'type','types')}."
@@ -35,4 +40,13 @@ def type_quiz(question_count=3, hints=False):
 
 
 if __name__ == "__main__":
-    type_quiz(hints=True)
+    print("Welcome to the Pokemon typing quiz!")
+    print()
+    question_count = click.prompt(
+        "How many Pokemon for the quiz?", type=int, default=10
+    )
+    question_hints = click.confirm("Would you like hints?")
+    # try:
+    type_quiz(question_count=question_count, hints=question_hints)
+    # except KeyboardInterrupt:
+    #     sys.exit(1)
