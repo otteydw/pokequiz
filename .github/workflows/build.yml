@@ -18,6 +18,7 @@ jobs:
       - name: Install requirements
         run: |
           pip install -r pokequiz/requirements.txt
+          pip install pyinstaller
       - name: Run PyInstaller
         run: |
           python -m PyInstaller pokequiz/pokequiz.spec
