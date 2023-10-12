@@ -1,14 +1,15 @@
 import click
 import helpers
 
-# import sys
-
 
 def type_quiz(question_count=10, hints=False):
     correct = 0
-
+    previous_pokemon = set()
+    pokemon = None
     for _ in range(question_count):
-        pokemon = helpers.random_pokemon()
+        while pokemon is None or pokemon.id in previous_pokemon:
+            pokemon = helpers.random_pokemon()
+        previous_pokemon.add(pokemon.id)
 
         pokemon_name = pokemon.name.replace("-", " ").title()
         pokemon_types = helpers.pokemon_types(pokemon)

@@ -4,7 +4,6 @@ from functools import lru_cache
 import pokebase as pb
 from pokebase import cache
 from rich import box
-
 from rich.console import Console
 from rich.table import Table
 
@@ -12,7 +11,8 @@ cache.API_CACHE
 
 
 def random_pokemon():
-    pokemon_id = random.randint(1, 1010)
+    MAX_POKEMON = 1010
+    pokemon_id = random.randint(1, MAX_POKEMON)
     mon = pb.pokemon(pokemon_id)
     return mon
 
