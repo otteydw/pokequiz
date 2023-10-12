@@ -2,10 +2,9 @@ import random
 from functools import lru_cache
 
 import pokebase as pb
-import textual
 from pokebase import cache
 from rich import box
-# import itertools
+
 from rich.console import Console
 from rich.table import Table
 
@@ -54,7 +53,7 @@ def combine_words(words):
     elif len(words) == 2:
         return f"{words[0]} and {words[1]}"
     else:
-        return f"{', '.join(words[:-1])}, and {words[-1]}"
+        return f"{', '.join(words[:-1])} and {words[-1]}"
 
 
 def simple_pluralize(word_list, singular_string, pluralized_string):

@@ -1,4 +1,3 @@
 pokebase
 click
-textual
 rich
