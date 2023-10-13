@@ -36,15 +36,15 @@ jobs:
           - os: macos-latest
             TARGET: macos
             CMD_BUILD: >
-              python -m PyInstaller pokequiz/pokequiz.spec &&
-              cd dist/ &&
-              zip -r9 pokequiz pokequiz
-            OUT_FILE_NAME: pokequiz.zip
+              pyinstaller pokequiz/pokequiz.spec
+              # cd dist/ &&
+              # zip -r9 pokequiz pokequiz.app/
+            OUT_FILE_NAME: pokequiz
             ASSET_MIME: application/zip
           - os: windows-latest
             TARGET: windows
             CMD_BUILD: >
-              python -m PyInstaller pokequiz/pokequiz.spec
+              pyinstaller pokequiz/pokequiz.spec
             OUT_FILE_NAME: pokequiz.exe
             ASSET_MIME: application/vnd.microsoft.portable-executable
     steps:
