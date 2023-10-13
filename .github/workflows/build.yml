@@ -12,7 +12,7 @@ jobs:
         include:
           - os: macos-latest
             TARGET: macos
-            CMD_BUILD >
+            CMD_BUILD: >
               python -m PyInstaller pokequiz/pokequiz.spec &&
               cd dist/ &&
               zip -r9 pokequiz pokequiz
@@ -20,7 +20,7 @@ jobs:
             ASSET_MIME: application/zip
           - os: windows-latest
             TARGET: windows
-            CMD_BUILD >
+            CMD_BUILD: >
               python -m PyInstaller pokequiz/pokequiz.spec
             OUT_FILE_NAME: pokequiz.exe
             ASSET_MIME: application/vnd.microsoft.portable-executable
