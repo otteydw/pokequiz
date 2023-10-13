@@ -26,7 +26,6 @@ jobs:
         with:
           name: Windows_pokequiz
           path: dist/pokequiz.exe
-
       - name: create release
         id: create_release
         uses: actions/create-release@v1
@@ -35,7 +34,8 @@ jobs:
         with:
           # tag_name: ${{ github.event.head_commit.message }}
           tag_name: v0.0.1
-          release_name: ${{ github.event.head_commit.message }}
+          # release_name: ${{ github.event.head_commit.message }}
+          release_name: v0.0.1
           # overwrite: true
           body: |
             Test Release v0.0.1
