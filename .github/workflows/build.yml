@@ -19,9 +19,9 @@ jobs:
             OUT_FILE_NAME: pokequiz.zip
             ASSET_MIME: application/zip
           - os: windows-latest
-            TARGET:windows
+            TARGET: windows
             CMD_BUILD >
-              python -m PyInstaller pokequiz/pokequiz.spec &&
+              python -m PyInstaller pokequiz/pokequiz.spec
             OUT_FILE_NAME: pokequiz.exe
             ASSET_MIME: application/vnd.microsoft.portable-executable
     steps:
@@ -31,7 +31,7 @@ jobs:
         uses: actions/setup-python@v4
         with:
           python-version: '3.11.5'
-          architecture: 'x64'
+          # architecture: 'x64'
       - name: Install requirements
         run: |
           pip install -r pokequiz/requirements.txt
