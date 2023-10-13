@@ -9,9 +9,9 @@ jobs:
     runs-on: windows-2019
     steps:
       - name: Checkout
-        uses: actions/checkout@v1
+        uses: actions/checkout@v4
       - name: Install Python
-        uses: actions/setup-python@v1
+        uses: actions/setup-python@v4
         with:
           python-version: '3.11.5'
           architecture: 'x64'
@@ -22,7 +22,7 @@ jobs:
       - name: Run PyInstaller
         run: |
           python -m PyInstaller pokequiz/pokequiz.spec
-      - uses: actions/upload-artifact@v2
+      - uses: actions/upload-artifact@v3
         with:
           name: Windows_pokequiz
           path: dist/pokequiz.exe
