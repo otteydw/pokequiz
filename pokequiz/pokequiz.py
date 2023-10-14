@@ -21,9 +21,16 @@ def type_quiz(question_count=10, hints=False):
             hint_text = f"Hint: it has {len(pokemon_types)} {helpers.simple_pluralize(pokemon_types, 'type','types')}."
         else:
             hint_text = ""
-        print(f"What are the typings for {pokemon_name}? {hint_text}")
-        guess = Prompt.ask("Answer")
-        guess_list = sorted(guess.lower().replace(" ", "").split(","))
+
+        valid_guess = False
+        while not valid_guess:
+            print(f"What are the typings for {pokemon_name}? {hint_text}")
+            guess = Prompt.ask("Answer")
+            guess_list = helpers.format_guess_as_list(guess)
+            if helpers.check_valid_pokemon_types(guess_list):
+                valid_guess = True
+            else:
+                print("[red]Invalid type specified. Please try again.[/red]\n")
 
         if guess_list == pokemon_types:
             print("[green]Correct![/green]")

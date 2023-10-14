@@ -131,3 +131,7 @@ def format_guess_as_list(guess):
         list: A list of strings
     """
     return sorted(guess.lower().replace(" ", "").split(","))
+
+
+def check_valid_pokemon_types(types_to_check):
+    return set(types_to_check).issubset(pokemon_type_list())
