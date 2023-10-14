@@ -9,7 +9,7 @@ jobs:
     name: Create Release
     runs-on: [ubuntu-latest]
     steps:
-    - name: Create Release
+    - name: Create Release ${{ github.ref_name }}
       id: create_release
       uses: actions/create-release@v1
       env:
@@ -58,10 +58,10 @@ jobs:
           pip install --upgrade pip
           pip install -r pokequiz/requirements.txt
           pip install pyinstaller
-      - name: Lint with black
+      - name: Lint with pyflakes
         run: |
-          pip install black
-          black .
+          pip install pyflakes
+          pyflakes .
       - name: Test with pytest
         run: |
           pip install pytest
