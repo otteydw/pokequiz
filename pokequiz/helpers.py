@@ -88,23 +88,17 @@ def display_list_in_4_columns(list_of_items):
     """
 
     # Split the list into chunks of 4 items.
-    # chunks = to_chunks(list_of_items, 4)
     chunks = split_list(list_of_items, 4)
 
     table = Table(title="Pokemon Types", show_header=False, box=box.SIMPLE)
-    # table.add_column("Released", justify="right", style="cyan", no_wrap=True)
-    # table.add_column("Title", style="magenta")
-    # table.add_column("Box Office", justify="right", style="green")
-    # table.add_column("Dingo", justify="right", style="green")
-    table.add_column()
-    table.add_column()
-    table.add_column()
-    table.add_column()
+    # Create 4 non-labeled columns
+    for _ in range(4):
+        table.add_column()
     # Iterate over the chunks and add each item to a row in the table.
     for chunk in chunks:
         table.add_row(*chunk)
 
-    table = Align.center(table, vertical="middle")
+    # table = Align.center(table, vertical="middle")
     console = Console()
     console.print(table)
 
