@@ -26,11 +26,11 @@ def type_quiz(question_count=10, hints=False):
         guess_list = sorted(guess.lower().replace(" ", "").split(","))
 
         if guess_list == pokemon_types:
-            print("Correct!")
+            print("[green]Correct![/green]")
             correct += 1
         else:
             print(
-                f"Wrong! {pokemon_name} has {helpers.simple_pluralize(pokemon_types, 'typing','typings')} of {helpers.combine_words(pokemon_types)}."
+                f"[red]Wrong![/red] {pokemon_name} has {helpers.simple_pluralize(pokemon_types, 'typing','typings')} of [bold]{helpers.combine_words(pokemon_types)}[/bold]."
             )
         print()
 
