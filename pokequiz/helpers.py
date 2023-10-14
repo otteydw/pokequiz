@@ -6,6 +6,7 @@ from pokebase import cache
 from rich import box
 from rich.console import Console
 from rich.table import Table
+from rich.align import Align
 
 cache.API_CACHE
 
@@ -103,6 +104,7 @@ def display_list_in_4_columns(list_of_items):
     for chunk in chunks:
         table.add_row(*chunk)
 
+    table = Align.center(table, vertical="middle")
     console = Console()
     console.print(table)
 
