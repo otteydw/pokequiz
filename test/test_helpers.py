@@ -1,4 +1,4 @@
-from pokequiz.helpers import combine_words, split_list
+from pokequiz.helpers import combine_words, format_guess_as_list, split_list
 
 
 def test_combine_words():
@@ -17,3 +17,7 @@ def test_split_list():
         [5, 6, 7, 8],
         [9, 10],
     ]
+
+
+def test_format_guess_as_list():
+    assert format_guess_as_list("Psychic, fairy") == ["fairy", "psychic"]

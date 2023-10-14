@@ -119,3 +119,15 @@ def split_list(list1, n):
     for i in range(0, len(list1), n):
         sublists.append(list1[i : i + n])
     return sublists
+
+
+def format_guess_as_list(guess):
+    """Format a user's guess by converting to lowercase, removing spaces and then splitting into a list.
+
+    Args:
+        guess string: Responses in upper or lower case, with or without spaces, multiple words split by commas.
+
+    Returns:
+        list: A list of strings
+    """
+    return sorted(guess.lower().replace(" ", "").split(","))
