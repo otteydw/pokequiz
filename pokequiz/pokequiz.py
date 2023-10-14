@@ -1,6 +1,6 @@
-import click
+# import click
 import helpers
-
+from rich.prompt import Prompt, Confirm, IntPrompt
 
 def type_quiz(question_count=10, hints=False):
     correct = 0
@@ -23,7 +23,8 @@ def type_quiz(question_count=10, hints=False):
         else:
             hint_text = ""
         print(f"What are the typings for {pokemon_name}? {hint_text}")
-        guess = input("Answer? ")
+        # guess = input("Answer? ")
+        guess = Prompt.ask("Answer")
         guess_list = sorted(guess.lower().replace(" ", "").split(","))
         # print(f"Guesses as sorted list: {guess_list}")
 
@@ -43,10 +44,14 @@ def type_quiz(question_count=10, hints=False):
 if __name__ == "__main__":
     print("Welcome to the Pokemon typing quiz!")
     print()
-    question_count = click.prompt(
-        "How many Pokemon for the quiz?", type=int, default=10
+    # question_count = click.prompt(
+    #     "How many Pokemon for the quiz?", type=int, default=10
+    # )
+    # question_hints = click.confirm("Would you like hints?")
+    question_count = IntPrompt.ask(
+        "How many Pokemon for the quiz?", default=10
     )
-    question_hints = click.confirm("Would you like hints?")
+    question_hints = Confirm.ask("Would you like hints?", default=False)
     # try:
     type_quiz(question_count=question_count, hints=question_hints)
     # except KeyboardInterrupt:
