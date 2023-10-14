@@ -1,6 +1,6 @@
 import helpers
-from rich.prompt import Prompt, Confirm, IntPrompt
 from rich import print
+from rich.prompt import Confirm, IntPrompt, Prompt
 
 
 def type_quiz(question_count=10, hints=False):
@@ -39,11 +39,8 @@ def type_quiz(question_count=10, hints=False):
 
 
 if __name__ == "__main__":
-
     print("Welcome to the Pokemon typing quiz!")
     print()
-    question_count = IntPrompt.ask(
-        "How many Pokemon for the quiz?", default=10
-    )
+    question_count = IntPrompt.ask("How many Pokemon for the quiz?", default=10)
     question_hints = Confirm.ask("Would you like hints?", default=False)
     type_quiz(question_count=question_count, hints=question_hints)

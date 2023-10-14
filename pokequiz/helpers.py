@@ -6,7 +6,8 @@ from pokebase import cache
 from rich import box
 from rich.console import Console
 from rich.table import Table
-from rich.align import Align
+
+# from rich.align import Align
 
 cache.API_CACHE
 
