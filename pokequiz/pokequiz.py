@@ -1,6 +1,7 @@
-# import click
 import helpers
 from rich.prompt import Prompt, Confirm, IntPrompt
+from rich import print
+
 
 def type_quiz(question_count=10, hints=False):
     correct = 0
@@ -13,9 +14,7 @@ def type_quiz(question_count=10, hints=False):
 
         pokemon_name = pokemon.name.replace("-", " ").title()
         pokemon_types = helpers.pokemon_types(pokemon)
-        # print(f"Name: {pokemon_name} | Types: {pokemon_types}")
         print()
-        # print(helpers.pokemon_type_list())
         helpers.display_list_in_4_columns(helpers.pokemon_type_list())
         print()
         if hints:
@@ -23,10 +22,8 @@ def type_quiz(question_count=10, hints=False):
         else:
             hint_text = ""
         print(f"What are the typings for {pokemon_name}? {hint_text}")
-        # guess = input("Answer? ")
         guess = Prompt.ask("Answer")
         guess_list = sorted(guess.lower().replace(" ", "").split(","))
-        # print(f"Guesses as sorted list: {guess_list}")
 
         if guess_list == pokemon_types:
             print("Correct!")
@@ -42,13 +39,11 @@ def type_quiz(question_count=10, hints=False):
 
 
 if __name__ == "__main__":
+
     print("Welcome to the Pokemon typing quiz!")
     print()
     question_count = IntPrompt.ask(
         "How many Pokemon for the quiz?", default=10
     )
     question_hints = Confirm.ask("Would you like hints?", default=False)
-    # try:
     type_quiz(question_count=question_count, hints=question_hints)
-    # except KeyboardInterrupt:
-    #     sys.exit(1)

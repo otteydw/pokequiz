@@ -1,3 +1,2 @@
 pokebase
-click
 rich
