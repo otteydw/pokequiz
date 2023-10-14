@@ -44,10 +44,6 @@ def type_quiz(question_count=10, hints=False):
 if __name__ == "__main__":
     print("Welcome to the Pokemon typing quiz!")
     print()
-    # question_count = click.prompt(
-    #     "How many Pokemon for the quiz?", type=int, default=10
-    # )
-    # question_hints = click.confirm("Would you like hints?")
     question_count = IntPrompt.ask(
         "How many Pokemon for the quiz?", default=10
     )
