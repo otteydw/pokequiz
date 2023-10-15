@@ -23,6 +23,27 @@ GENERATIONS = [
     "Paldea",
 ]
 
+POKEMON_TYPES = {
+    "bug": ":lady_beetle:",
+    "dark": ":new_moon:",
+    "dragon": ":dragon_face:",
+    "electric": ":bulb:",
+    "fairy": ":fairy:",
+    "fighting": ":boxing_glove:",
+    "fire": ":fire:",
+    "flying": ":eagle:",
+    "ghost": ":ghost:",
+    "grass": ":herb:",
+    "ground": ":mountain: ",
+    "ice": ":snowflake: ",
+    "normal": ":grinning_face:",
+    "poison": ":skull_and_crossbones: ",
+    "psychic": ":crystal_ball:",
+    "rock": "🪨 ",
+    "steel": ":nut_and_bolt:",
+    "water": ":droplet:",
+}
+
 
 def random_pokemon():
     MAX_POKEMON = 1010
@@ -57,6 +78,14 @@ def pokemon_type_list():
     pokemon_type_list.remove("shadow")
     pokemon_type_list.remove("unknown")
     return pokemon_type_list
+
+
+def pokemon_type_list_with_emoji():
+    pokemon_type_list = sorted(POKEMON_TYPES.keys())
+    pokemon_types_with_emoji = []
+    for pokemon_type in pokemon_type_list:
+        pokemon_types_with_emoji.append(f"{POKEMON_TYPES[pokemon_type]} {pokemon_type}")
+    return pokemon_types_with_emoji
 
 
 def combine_words(words):

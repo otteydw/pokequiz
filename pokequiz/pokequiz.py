@@ -19,7 +19,7 @@ def type_quiz(question_count=10, hints=False, generation=0):
         pokemon_name = pokemon.name.replace("-", " ").title()
         pokemon_types = helpers.pokemon_types(pokemon)
         print()
-        helpers.display_list_in_4_columns(helpers.pokemon_type_list())
+        helpers.display_list_in_4_columns(helpers.pokemon_type_list_with_emoji())
         print()
         if hints:
             hint_text = f"Hint: it has {len(pokemon_types)} {helpers.simple_pluralize(pokemon_types, 'type','types')}."
