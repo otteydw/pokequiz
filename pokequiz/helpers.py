@@ -11,7 +11,18 @@ from rich.table import Table
 
 cache.API_CACHE
 
-GENERATIONS = ['Kanto','Johto','Hoenn','Sinnoh','Unova','Kalos','Alola','Galar','Paldea']
+GENERATIONS = [
+    "Kanto",
+    "Johto",
+    "Hoenn",
+    "Sinnoh",
+    "Unova",
+    "Kalos",
+    "Alola",
+    "Galar",
+    "Paldea",
+]
+
 
 def random_pokemon():
     MAX_POKEMON = 1010
@@ -19,11 +30,13 @@ def random_pokemon():
     mon = pb.pokemon(pokemon_id)
     return mon
 
+
 def random_pokemon_from_generation(generation_number):
     generation_resource = pb.generation(generation_number)
     random_mon = random.choice(generation_resource.pokemon_species)
     mon = pb.pokemon(random_mon.name)
     return mon
+
 
 # def pokemon_types(pokemon_id):
 #    mon = pb.pokemon(pokemon_id)
@@ -142,10 +155,12 @@ def format_guess_as_list(guess):
 def check_valid_pokemon_types(types_to_check):
     return set(types_to_check).issubset(pokemon_type_list())
 
+
 def generation_number_to_name(generation_number):
     if generation_number < 1 or generation_number > 9:
         raise Exception("Invalid generation!")
-    return GENERATIONS[generation_number-1]
+    return GENERATIONS[generation_number - 1]
+
 
 def generation_menu():
     print("A: All")

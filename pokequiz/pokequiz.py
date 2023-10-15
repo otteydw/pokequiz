@@ -10,7 +10,7 @@ def type_quiz(question_count=10, hints=False, generation=0):
     pokemon = None
     for _ in range(question_count):
         while pokemon is None or pokemon.id in previous_pokemon:
-            if generation==0:
+            if generation == 0:
                 pokemon = helpers.random_pokemon()
             else:
                 pokemon = helpers.random_pokemon_from_generation(generation)
@@ -46,22 +46,28 @@ def type_quiz(question_count=10, hints=False, generation=0):
         print()
 
     print("Done!")
-    print(f"You got {correct} out of {question_count} ({round(100*correct/question_count)}%) correct!")
+    print(
+        f"You got {correct} out of {question_count} ({round(100*correct/question_count)}%) correct!"
+    )
+
 
 def generation_selection():
     valid_generation = False
     while not valid_generation:
-        generation_to_quiz = Prompt.ask("From what generation?", default='All')
-        if generation_to_quiz[0].upper() == 'A':
+        generation_to_quiz = Prompt.ask("From what generation?", default="All")
+        if generation_to_quiz[0].upper() == "A":
             generation_to_quiz = 0
             valid_generation = True
-        elif generation_to_quiz.isnumeric() and 1 <= int(generation_to_quiz) <= len(helpers.GENERATIONS):
+        elif generation_to_quiz.isnumeric() and 1 <= int(generation_to_quiz) <= len(
+            helpers.GENERATIONS
+        ):
             generation_to_quiz = int(generation_to_quiz)
             valid_generation = True
         else:
             print("[red]Invalid selection!")
 
     return generation_to_quiz
+
 
 def type_quiz_intro():
     print("Welcome to the Pokemon typing quiz!")
@@ -70,7 +76,12 @@ def type_quiz_intro():
     helpers.generation_menu()
     generation_to_quiz = generation_selection()
     question_hints = Confirm.ask("Would you like hints?", default=False)
-    type_quiz(question_count=question_count, hints=question_hints, generation=generation_to_quiz)
+    type_quiz(
+        question_count=question_count,
+        hints=question_hints,
+        generation=generation_to_quiz,
+    )
+
 
 if __name__ == "__main__":
     type_quiz_intro()

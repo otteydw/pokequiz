@@ -1,6 +1,8 @@
-from pokequiz.helpers import (check_valid_pokemon_types, combine_words,
-                              format_guess_as_list, split_list, generation_number_to_name)
 import pytest
+
+from pokequiz.helpers import (check_valid_pokemon_types, combine_words,
+                              format_guess_as_list, generation_number_to_name,
+                              split_list)
 
 
 def test_combine_words():
@@ -31,6 +33,7 @@ def test_check_valid_pokemon_types():
     assert check_valid_pokemon_types(["psychic", "rock"])
     assert not check_valid_pokemon_types(["dingo"])
     assert not check_valid_pokemon_types([""])
+
 
 def test_generation_number_to_name():
     assert generation_number_to_name(1) == "Kanto"
