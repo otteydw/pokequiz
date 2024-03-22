@@ -1,18 +1,19 @@
 import pytest
 
-from pokequiz.helpers import (check_valid_pokemon_types, combine_words,
-                              format_guess_as_list, generation_number_to_name,
-                              split_list)
+from pokequiz.helpers import (
+    check_valid_pokemon_types,
+    combine_words,
+    format_guess_as_list,
+    generation_number_to_name,
+    split_list,
+)
 
 
 def test_combine_words():
     assert combine_words(["apple"]) == "apple"
     assert combine_words(["apple", "banana"]) == "apple and banana"
     assert combine_words(["apple", "banana", "orange"]) == "apple, banana and orange"
-    assert (
-        combine_words(["apple", "banana", "orange", "cherry"])
-        == "apple, banana, orange and cherry"
-    )
+    assert combine_words(["apple", "banana", "orange", "cherry"]) == "apple, banana, orange and cherry"
 
 
 def test_split_list():

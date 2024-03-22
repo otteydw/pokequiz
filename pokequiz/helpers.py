@@ -72,9 +72,7 @@ def pokemon_types(pokemon):
 
 @lru_cache(maxsize=None)
 def pokemon_type_list():
-    pokemon_type_list = sorted(
-        [pokemon_type["name"] for pokemon_type in pb.APIResourceList("type")]
-    )
+    pokemon_type_list = sorted([pokemon_type["name"] for pokemon_type in pb.APIResourceList("type")])
     pokemon_type_list.remove("shadow")
     pokemon_type_list.remove("unknown")
     return pokemon_type_list
@@ -195,3 +193,31 @@ def generation_menu():
     print("A: All")
     for generation_number_offset, generation_name in enumerate(GENERATIONS):
         print(f"{generation_number_offset+1}: {generation_name}")
+
+
+def pokedex_text_entry(pokemon_name_or_id, language="en"):
+    mon = pb.pokemon_species(pokemon_name_or_id)
+    for flavor_text_entry in mon.flavor_text_entries:
+        # from rich import inspect
+        # inspect(flavor_text_entry.language)
+        if flavor_text_entry.language.name == language:
+            flavor_text = flavor_text_entry.flavor_text.replace("\n", " ").replace("\x0c", " ")
+            # print(mon.flavor_text_entries[0].language.name)
+            # print(mon.name)
+            # print(mon.name.upper())
+            flavor_text = flavor_text.replace(mon.name.upper(), "BLANK")
+            flavor_text = flavor_text.replace(mon.name.capitalize(), "BLANK")
+            flavor_text = flavor_text.replace(mon.name, "BLANK")
+            return flavor_text
+
+
+def multiple_choice_from_generation(correct_answer, total_answers, generation):
+    choices = set()
+    choices.add(correct_answer.capitalize())
+    while len(choices) < total_answers:
+        if generation == 0:
+            pokemon = random_pokemon()
+        else:
+            pokemon = random_pokemon_from_generation(generation)
+        choices.add(pokemon.name.capitalize())
+    return sorted(list(choices))
