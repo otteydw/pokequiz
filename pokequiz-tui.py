@@ -1,8 +1,9 @@
 import sys
 
-import helpers
 from rich import print
 from rich.prompt import Confirm, IntPrompt, Prompt
+
+from pokequiz import helpers
 
 
 def type_quiz(question_count=10, hints=False, generation=0):
