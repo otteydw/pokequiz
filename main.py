@@ -3,6 +3,7 @@ from enum import Enum, auto
 
 import pygame
 
+from pokequiz import helpers
 from pokequiz.constants import BACKGROUND_COLOR, BLACK, FONT, HEIGHT, WHITE, WIDTH
 from pokequiz.helpers import POKEMON_TYPES
 
@@ -110,7 +111,7 @@ class InputBox:
         pygame.draw.rect(screen, self.color, self.rect, 2)
 
 
-def type_quiz(WIN):
+def type_quiz(WIN, question_count=2, hints=False, generation=0):
     run = True
     clock = pygame.time.Clock()
 
@@ -122,38 +123,54 @@ def type_quiz(WIN):
     type_buttons = []
     for type_num, pokemon_type in enumerate(POKEMON_TYPES.keys()):
         button_x = 50 + (BUTTON_WIDTH + BUTTON_X_BUFFER) * (type_num % 6)
-        button_y = 50 + (BUTTON_HEIGHT + BUTTON_Y_BUFFER) * (type_num // 6)
+        button_y = 100 + (BUTTON_HEIGHT + BUTTON_Y_BUFFER) * (type_num // 6)
         button = Button(BUTTON_SIZE, pokemon_type.upper(), [button_x, button_y], center_text=True)
         type_buttons.append(button)
 
-    while run:
+    # correct = 0
+    previous_pokemon = set()
+    pokemon = None
+    for _ in range(question_count):
+        while pokemon is None or pokemon.id in previous_pokemon:
+            if generation == 0:
+                pokemon = helpers.random_pokemon()
+            else:
+                pokemon = helpers.random_pokemon_from_generation(generation)
+        previous_pokemon.add(pokemon.id)
+
+        pokemon_name = pokemon.name.replace("-", " ").title()
+        print(pokemon_name)
+        pokemon_name_field = FONT.render(pokemon_name, True, WHITE, BACKGROUND_COLOR)
         # clock.tick(FPS)
 
         WIN.fill(BACKGROUND_COLOR)
+        WIN.blit(pokemon_name_field, (10, 10))
 
-        events = pygame.event.get()
+        while run:
+            events = pygame.event.get()
 
-        for event in events:
-            if event.type == pygame.KEYDOWN:
-                if event.key == "q":
+            for event in events:
+                if event.type == pygame.KEYDOWN:
+                    if event.key == "q":
+                        run = False
+                        return
+                if event.type == pygame.QUIT:
+                    print("quit")
                     run = False
-            if event.type == pygame.QUIT:
-                print("quit")
-                run = False
 
-            # if event.type == pygame.MOUSEBUTTONDOWN:
-            #     pos = pygame.mouse.get_pos()
+                # if event.type == pygame.MOUSEBUTTONDOWN:
+                #     pos = pygame.mouse.get_pos()
 
-        for button in type_buttons:
-            button.render(WIN)
+            for button in type_buttons:
+                button.render(WIN)
 
-        for button in type_buttons:
-            if button.clicked(events):
-                print(button.text.lower())
-                button.flip()
+            for button in type_buttons:
+                if button.clicked(events):
+                    print(button.text.lower())
+                    button.flip()
 
-        pygame.display.flip()
-        clock.tick(30)
+            pygame.display.flip()
+            clock.tick(30)
 
 
 def main():
