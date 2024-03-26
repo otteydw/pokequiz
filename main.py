@@ -137,13 +137,9 @@ def type_quiz(WIN, question_count=5, hints=True, generation=0):
 
 def main():
     run = True
-    # game_state = GameState.MAIN_MENU
-    game_state = GameState.TYPE_QUIZ
-
-    # clock = pygame.time.Clock()
+    game_state = GameState.MAIN_MENU
 
     while run:
-        # clock.tick(FPS)
         events = pygame.event.get()
 
         for event in events:
@@ -181,7 +177,6 @@ def main():
                     print("Pokedex Quiz")
                     game_state = GameState.POKEDEX_QUIZ
             case GameState.TYPE_QUIZ:
-                # draw_text("Press SPACE", FONT, TEXT_COLOR,160,250)
                 run = type_quiz(WIN)
                 game_state = GameState.MAIN_MENU
             case _:

@@ -3,11 +3,8 @@ import pygame
 # from pokequiz.constants import WHITE, BLACK
 from pokequiz.constants import BLACK, FONT, WHITE
 
-# WHITE = pygame.Color('white')
-# BLACK = pygame.Color('black')
 COLOR_INACTIVE = pygame.Color("lightskyblue3")
 COLOR_ACTIVE = pygame.Color("dodgerblue2")
-# FONT = pygame.font.SysFont("arialblack", FONT_HEIGHT)
 
 
 class Button:
@@ -30,10 +27,9 @@ class Button:
         window.blit(self.button, (self.pos[0], self.pos[1]))
         if self.center_text:
             text_width, _ = self.textSurf.get_size()
-            text_position = (self.pos[0] + (self.size[0] - text_width) // 2, self.pos[1] + 5)
+            text_position = (self.pos[0] + (self.size[0] - text_width) // 2, self.pos[1] + 2)
         else:
             text_position = (self.pos[0] + 1, self.pos[1] + 5)
-        # window.blit(self.textSurf, (self.pos[0]+1, self.pos[1]+5))
         window.blit(self.textSurf, text_position)
 
     def clicked(self, events):
