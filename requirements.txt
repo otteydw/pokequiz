@@ -1,0 +1,4 @@
+pillow
+pokebase
+pygame
+rich
