@@ -4,7 +4,7 @@ from enum import Enum, auto
 import pygame
 
 from pokequiz import helpers
-from pokequiz.constants import BACKGROUND_COLOR, FONT, HEIGHT, WHITE, WIDTH
+from pokequiz.constants import BACKGROUND_COLOR, FONT, GREEN, HEIGHT, RED, WHITE, WIDTH
 from pokequiz.gui import Button
 from pokequiz.helpers import POKEMON_TYPES
 
@@ -25,7 +25,7 @@ def draw_text(text, font, text_color, x, y):
     WIN.blit(img, (x, y))
 
 
-def type_quiz(WIN, question_count=2, hints=False, generation=0):
+def type_quiz(WIN, question_count=5, hints=True, generation=0):
 
     clock = pygame.time.Clock()
 
@@ -41,14 +41,12 @@ def type_quiz(WIN, question_count=2, hints=False, generation=0):
         button = Button(BUTTON_SIZE, pokemon_type.upper(), [button_x, button_y], center_text=True)
         type_buttons.append(button)
 
-    guess_button = Button(
-        (400, 100), "Guess", [50, 300], bgColor=pygame.Color("red"), textColor=WHITE, center_text=True
-    )
+    guess_button = Button((400, 100), "Guess", [50, 300], bgColor=RED, textColor=WHITE, center_text=True)
 
     correct = 0
     previous_pokemon = set()
     pokemon = None
-    for _ in range(question_count):
+    for question in range(question_count):
         run = True
         while pokemon is None or pokemon.id in previous_pokemon:
             if generation == 0:
@@ -58,10 +56,13 @@ def type_quiz(WIN, question_count=2, hints=False, generation=0):
         previous_pokemon.add(pokemon.id)
 
         pokemon_name = pokemon.name.replace("-", " ").title()
-        print(pokemon_name)  # DEBUG
         pokemon_types = helpers.pokemon_types(pokemon)
 
-        pokemon_name_field = FONT.render(f"{pokemon_name}: {pokemon_types}", True, WHITE, BACKGROUND_COLOR)
+        pokemon_name_field = FONT.render(f"{question+1}: {pokemon_name}", True, WHITE, BACKGROUND_COLOR)
+        if hints:
+            # hint_text = f"Hint: {pokemon_types}"
+            hint_text = f"Hint: it has {len(pokemon_types)} {helpers.simple_pluralize(pokemon_types, 'type','types')}."
+            pokemon_hint_field = FONT.render(hint_text, True, WHITE, BACKGROUND_COLOR)
 
         # input_box1 = InputBox(20, 400, 140, FONT_HEIGHT + 10, auto_active=True)
 
@@ -84,6 +85,15 @@ def type_quiz(WIN, question_count=2, hints=False, generation=0):
             WIN.fill(BACKGROUND_COLOR)
             WIN.blit(pokemon_name_field, (10, 10))
 
+            # Score
+            score_field = FONT.render(str(correct), True, WHITE, GREEN)
+            score_field_rect = pygame.Rect(WIDTH - 100, 0, 100, score_field.get_height())
+            pygame.draw.rect(WIN, pygame.Color("green"), score_field_rect)
+            WIN.blit(score_field, (WIDTH - score_field.get_width() - 10, 0))
+
+            if hints:
+                WIN.blit(pokemon_hint_field, (10, 220))
+
             for button in type_buttons:
                 button.render(WIN)
 
@@ -91,7 +101,6 @@ def type_quiz(WIN, question_count=2, hints=False, generation=0):
 
             for button in type_buttons:
                 if button.clicked(events):
-                    # print(button.text.lower())
                     button.flip()
 
             # input_box1.update()
@@ -102,16 +111,16 @@ def type_quiz(WIN, question_count=2, hints=False, generation=0):
 
             if guess_button.clicked(events):
                 if selected_types == pokemon_types:
-                    print("Correct!")
                     correct += 1
-                    for button in type_buttons:
-                        button.deselect()
-                        # button.render(WIN)
-                    # pygame.display.flip()
-                    run = False
+                for button in type_buttons:
+                    button.deselect()
+                    # button.render(WIN)
+                # pygame.display.flip()
+                run = False
 
             clock.tick(30)
 
+    print(f"You got {correct} out of {question_count} ({round(100*correct/question_count)}%) correct!")
     return True
 
 

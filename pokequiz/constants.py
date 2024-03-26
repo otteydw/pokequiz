@@ -3,8 +3,11 @@ import pygame
 pygame.init()
 WIDTH, HEIGHT = 800, 800
 
-WHITE = pygame.Color("white")
 BLACK = pygame.Color("black")
+GREEN = pygame.Color("green")
+RED = pygame.Color("red")
+WHITE = pygame.Color("white")
+YELLOW = pygame.Color("yellow")
 
 BACKGROUND_COLOR = (52, 78, 91)
 FONT_HEIGHT = 40
