@@ -1,3 +1,4 @@
+pillow
 pokebase
 pygame
 rich

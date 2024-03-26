@@ -8,7 +8,7 @@ from pokequiz.constants import BACKGROUND_COLOR, FONT, GREEN, HEIGHT, RED, WHITE
 from pokequiz.gui import Button
 from pokequiz.helpers import POKEMON_TYPES
 
-# FPS = 60
+FPS = 60
 
 WIN = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Poke Quiz")
@@ -34,14 +34,16 @@ def type_quiz(WIN, question_count=5, hints=True, generation=0):
     BUTTON_SIZE = (BUTTON_WIDTH, BUTTON_HEIGHT)
     BUTTON_X_BUFFER = 10
     BUTTON_Y_BUFFER = 20
+    BUTTON_BEGINNING_X_POSITION = 50
+    BUTTON_BEGINNING_Y_POSITION = 260
     type_buttons = []
     for type_num, pokemon_type in enumerate(POKEMON_TYPES.keys()):
-        button_x = 50 + (BUTTON_WIDTH + BUTTON_X_BUFFER) * (type_num % 6)
-        button_y = 100 + (BUTTON_HEIGHT + BUTTON_Y_BUFFER) * (type_num // 6)
+        button_x = BUTTON_BEGINNING_X_POSITION + (BUTTON_WIDTH + BUTTON_X_BUFFER) * (type_num % 6)
+        button_y = BUTTON_BEGINNING_Y_POSITION + (BUTTON_HEIGHT + BUTTON_Y_BUFFER) * (type_num // 6)
         button = Button(BUTTON_SIZE, pokemon_type.upper(), [button_x, button_y], center_text=True)
         type_buttons.append(button)
 
-    guess_button = Button((400, 100), "Guess", [50, 300], bgColor=RED, textColor=WHITE, center_text=True)
+    guess_button = Button((400, 100), "Guess", [50, 460], bgColor=RED, textColor=WHITE, center_text=True)
 
     correct = 0
     previous_pokemon = set()
@@ -65,6 +67,11 @@ def type_quiz(WIN, question_count=5, hints=True, generation=0):
             pokemon_hint_field = FONT.render(hint_text, True, WHITE, BACKGROUND_COLOR)
 
         # input_box1 = InputBox(20, 400, 140, FONT_HEIGHT + 10, auto_active=True)
+
+        POKEMON_IMAGE_WIDTH = 250
+        POKEMON_IMAGE_HEIGHT = 250
+        pokemon_image = pygame.image.load(helpers.pokemon_sprite(pokemon))
+        pokemon_image = pygame.transform.scale(pokemon_image, (POKEMON_IMAGE_WIDTH, POKEMON_IMAGE_HEIGHT))
 
         while run:
             events = pygame.event.get()
@@ -91,8 +98,12 @@ def type_quiz(WIN, question_count=5, hints=True, generation=0):
             pygame.draw.rect(WIN, pygame.Color("green"), score_field_rect)
             WIN.blit(score_field, (WIDTH - score_field.get_width() - 10, 0))
 
+            POKEMON_IMAGE_X = (WIDTH - pokemon_image.get_width()) / 2
+            POKEMON_IMAGE_Y = 15
+            WIN.blit(pokemon_image, (POKEMON_IMAGE_X, POKEMON_IMAGE_Y))
+
             if hints:
-                WIN.blit(pokemon_hint_field, (10, 220))
+                WIN.blit(pokemon_hint_field, (10, 380))
 
             for button in type_buttons:
                 button.render(WIN)
@@ -118,7 +129,7 @@ def type_quiz(WIN, question_count=5, hints=True, generation=0):
                 # pygame.display.flip()
                 run = False
 
-            clock.tick(30)
+            clock.tick(FPS)
 
     print(f"You got {correct} out of {question_count} ({round(100*correct/question_count)}%) correct!")
     return True

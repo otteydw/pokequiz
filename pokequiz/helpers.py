@@ -1,7 +1,10 @@
 import random
+import sys
 from functools import lru_cache
+from pathlib import Path, PurePath
 
 import pokebase as pb
+import requests
 from pokebase import cache
 from rich import box
 from rich.console import Console
@@ -43,6 +46,8 @@ POKEMON_TYPES = {
     "steel": ":nut_and_bolt:",
     "water": ":droplet:",
 }
+
+IMAGE_DIRECTORY = Path("images/")
 
 
 def random_pokemon():
@@ -221,3 +226,19 @@ def multiple_choice_from_generation(correct_answer, total_answers, generation):
             pokemon = random_pokemon_from_generation(generation)
         choices.add(pokemon.name.capitalize())
     return sorted(list(choices))
+
+
+def pokemon_sprite(pokemon):
+    pokemon_image_file = Path(PurePath(IMAGE_DIRECTORY, pokemon.name + ".gif"))
+
+    if not pokemon_image_file.is_file():
+        image_url = pokemon.sprites.front_default
+        response = requests.get(image_url)
+        if response.status_code == 200:
+            with open(pokemon_image_file, "wb") as f:
+                f.write(response.content)
+        else:
+            print(f"Error downloading {image_url}. Response code {response.status_code}.")
+            sys.exit(1)
+
+    return pokemon_image_file
