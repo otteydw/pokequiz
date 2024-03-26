@@ -4,8 +4,8 @@ from enum import Enum, auto
 import pygame
 
 from pokequiz import helpers
-from pokequiz.constants import BACKGROUND_COLOR, FONT, FONT_HEIGHT, HEIGHT, WHITE, WIDTH
-from pokequiz.gui import Button, InputBox
+from pokequiz.constants import BACKGROUND_COLOR, FONT, HEIGHT, WHITE, WIDTH
+from pokequiz.gui import Button
 from pokequiz.helpers import POKEMON_TYPES
 
 # FPS = 60
@@ -26,7 +26,7 @@ def draw_text(text, font, text_color, x, y):
 
 
 def type_quiz(WIN, question_count=2, hints=False, generation=0):
-    run = True
+
     clock = pygame.time.Clock()
 
     BUTTON_WIDTH = 100
@@ -41,10 +41,15 @@ def type_quiz(WIN, question_count=2, hints=False, generation=0):
         button = Button(BUTTON_SIZE, pokemon_type.upper(), [button_x, button_y], center_text=True)
         type_buttons.append(button)
 
+    guess_button = Button(
+        (400, 100), "Guess", [50, 300], bgColor=pygame.Color("red"), textColor=WHITE, center_text=True
+    )
+
     correct = 0
     previous_pokemon = set()
     pokemon = None
     for _ in range(question_count):
+        run = True
         while pokemon is None or pokemon.id in previous_pokemon:
             if generation == 0:
                 pokemon = helpers.random_pokemon()
@@ -53,11 +58,12 @@ def type_quiz(WIN, question_count=2, hints=False, generation=0):
         previous_pokemon.add(pokemon.id)
 
         pokemon_name = pokemon.name.replace("-", " ").title()
-        print(pokemon_name)
-        pokemon_name_field = FONT.render(pokemon_name, True, WHITE, BACKGROUND_COLOR)
-        # clock.tick(FPS)
+        print(pokemon_name)  # DEBUG
+        pokemon_types = helpers.pokemon_types(pokemon)
 
-        input_box1 = InputBox(20, 400, 140, FONT_HEIGHT + 10, auto_active=True)
+        pokemon_name_field = FONT.render(f"{pokemon_name}: {pokemon_types}", True, WHITE, BACKGROUND_COLOR)
+
+        # input_box1 = InputBox(20, 400, 140, FONT_HEIGHT + 10, auto_active=True)
 
         while run:
             events = pygame.event.get()
@@ -65,14 +71,15 @@ def type_quiz(WIN, question_count=2, hints=False, generation=0):
             for event in events:
                 if event.type == pygame.QUIT:
                     print("quit")
-                    run = False
+                    return False
+                    # run = False
 
-                answer = input_box1.handle_event(event)
-                if answer:
-                    print(f"Answer was {answer}")
-                    if answer.lower() == pokemon_name.lower():
-                        print("Winner!")
-                        correct += 1
+                # answer = input_box1.handle_event(event)
+                # if answer:
+                #     print(f"Answer was {answer}")
+                #     if answer.lower() == pokemon_name.lower():
+                #         print("Winner!")
+                #         correct += 1
 
             WIN.fill(BACKGROUND_COLOR)
             WIN.blit(pokemon_name_field, (10, 10))
@@ -80,15 +87,32 @@ def type_quiz(WIN, question_count=2, hints=False, generation=0):
             for button in type_buttons:
                 button.render(WIN)
 
+            guess_button.render(WIN)
+
             for button in type_buttons:
                 if button.clicked(events):
-                    print(button.text.lower())
+                    # print(button.text.lower())
                     button.flip()
 
-            input_box1.update()
-            input_box1.draw(WIN)
+            # input_box1.update()
+            # input_box1.draw(WIN)
             pygame.display.flip()
+
+            selected_types = [button.text.lower() for button in type_buttons if button.is_selected()]
+
+            if guess_button.clicked(events):
+                if selected_types == pokemon_types:
+                    print("Correct!")
+                    correct += 1
+                    for button in type_buttons:
+                        button.deselect()
+                        # button.render(WIN)
+                    # pygame.display.flip()
+                    run = False
+
             clock.tick(30)
+
+    return True
 
 
 def main():
@@ -138,7 +162,7 @@ def main():
                     game_state = GameState.POKEDEX_QUIZ
             case GameState.TYPE_QUIZ:
                 # draw_text("Press SPACE", FONT, TEXT_COLOR,160,250)
-                type_quiz(WIN)
+                run = type_quiz(WIN)
                 game_state = GameState.MAIN_MENU
             case _:
                 print("Unknown game state")

@@ -12,20 +12,17 @@ COLOR_ACTIVE = pygame.Color("dodgerblue2")
 
 class Button:
     # Modified from https://stackoverflow.com/questions/63762922/whats-the-most-convenient-way-to-add-buttons-in-pygame-with-text
-    def __init__(self, size, text, pos, bgColor=WHITE, textColor=BLACK, center_text=False):
+    def __init__(self, size, text, pos, bgColor=WHITE, textColor=BLACK, center_text=False, selected=False):
         self.pos = pos
         self.size = size
         self.text = text
         self.center_text = center_text
-        self.bgColor = bgColor
-        self.textColor = textColor
-        # self.font = pygame.font.Font(pygame.font.get_default_font(), self.size[1])
-        # self.textSurf = self.font.render(f"{self.text}", True, self.textColor)
-        # self.button = pygame.Surface((self.size[0], self.size[1])).convert()
-        # self.button.fill(self.bgColor)
+        self.selected = selected
+        self.bgColor = bgColor if self.selected else textColor
+        self.textColor = textColor if self.selected else bgColor
+        self.font = pygame.font.Font(pygame.font.get_default_font(), self.size[1])
 
     def render(self, window):
-        self.font = pygame.font.Font(pygame.font.get_default_font(), self.size[1])
         self.textSurf = self.font.render(f"{self.text}", True, self.textColor)
         self.button = pygame.Surface((self.size[0], self.size[1])).convert()
         self.button.fill(self.bgColor)
@@ -49,6 +46,14 @@ class Button:
 
     def flip(self):
         self.bgColor, self.textColor = self.textColor, self.bgColor
+        self.selected = not self.selected
+
+    def deselect(self):
+        if self.selected:
+            self.flip()
+
+    def is_selected(self):
+        return self.selected
 
 
 class InputBox:
