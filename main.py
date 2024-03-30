@@ -164,8 +164,8 @@ def type_quiz(WIN, question_count=10, hints=True, generation=0):
 
 def main():
     run = True
-    # game_state = GameState.MAIN_MENU
-    game_state = GameState.TYPE_QUIZ
+    game_state = GameState.MAIN_MENU
+    # game_state = GameState.TYPE_QUIZ
 
     while run:
         events = pygame.event.get()
