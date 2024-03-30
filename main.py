@@ -4,7 +4,16 @@ from enum import Enum, auto
 import pygame
 
 from pokequiz import helpers
-from pokequiz.constants import BACKGROUND_COLOR, FONT, GREEN, HEIGHT, RED, WHITE, WIDTH
+from pokequiz.constants import (
+    BACKGROUND_COLOR,
+    BLACK,
+    FONT,
+    GREEN,
+    HEIGHT,
+    RED,
+    WHITE,
+    WIDTH,
+)
 from pokequiz.gui import Button, ButtonImage, InfoBox
 from pokequiz.helpers import POKEMON_TYPES
 
@@ -138,7 +147,18 @@ def type_quiz(WIN, question_count=10, hints=True, generation=0):
 
             clock.tick(FPS)
 
-    print(f"You got {correct} out of {question_count} ({round(100*correct/question_count)}%) correct!")
+    # Display score at the end
+    popup = InfoBox(
+        size=(int(WIDTH * 0.75), 40),
+        text=f"You got {correct} / {question_count} correct! ({round(100*correct/question_count)}%)",
+        pos=(int(WIDTH * 0.125), HEIGHT // 4),
+        textColor=WHITE,
+        bgColor=BLACK,
+        center_text=True,
+    )
+    popup.render(WIN)
+    pygame.display.flip()
+    pygame.time.wait(5000)
     return True
 
 
