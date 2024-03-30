@@ -47,7 +47,10 @@ POKEMON_TYPES = {
     "water": ":droplet:",
 }
 
-IMAGE_DIRECTORY = Path("images/")
+CACHED_IMAGES_DIRECTORY = Path("images/cached/")
+STATIC_IMAGES_DIRECTORY = Path("images/static/")
+
+TYPE_IMAGES_DIRECTORY = Path.joinpath(STATIC_IMAGES_DIRECTORY, "types")
 
 
 def random_pokemon():
@@ -229,7 +232,7 @@ def multiple_choice_from_generation(correct_answer, total_answers, generation):
 
 
 def pokemon_sprite(pokemon):
-    pokemon_image_file = Path(PurePath(IMAGE_DIRECTORY, pokemon.name + ".gif"))
+    pokemon_image_file = Path(PurePath(CACHED_IMAGES_DIRECTORY, pokemon.name + ".gif"))
 
     if not pokemon_image_file.is_file():
         image_url = pokemon.sprites.front_default
@@ -242,3 +245,9 @@ def pokemon_sprite(pokemon):
             sys.exit(1)
 
     return pokemon_image_file
+
+
+def type_sprite(type_name):
+
+    type_image_file = Path(PurePath(TYPE_IMAGES_DIRECTORY, type_name + ".png"))
+    return type_image_file

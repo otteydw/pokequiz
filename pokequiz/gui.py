@@ -52,6 +52,48 @@ class Button:
         return self.selected
 
 
+class ButtonImage:
+    def __init__(self, size, text, image, pos, selected=False, border_width=5):
+        self.border_width = border_width
+        self.border_pos = pos
+        self.border_size = size
+        self.pos = (pos[0] + self.border_width, pos[1] + self.border_width)
+        self.size = (size[0] - 2 * self.border_width, size[1] - 2 * self.border_width)
+        self.text = text
+        self.selected = selected
+
+        self.button = pygame.image.load(image)
+        self.button = pygame.transform.scale(self.button, self.size)
+
+    def render(self, window):
+        window.blit(self.button, self.pos)
+        if self.selected:
+            pygame.draw.rect(
+                window,
+                COLOR_ACTIVE,
+                (self.border_pos[0], self.border_pos[1], self.border_size[0], self.border_size[1]),
+                self.border_width,
+            )
+
+    def clicked(self, events):
+        mousePos = pygame.mouse.get_pos()  #  get the mouse position
+        for event in events:
+            if self.button.get_rect(topleft=self.pos).collidepoint(mousePos[0], mousePos[1]):
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    return True
+        return False
+
+    def flip(self):
+        self.selected = not self.selected
+
+    def deselect(self):
+        if self.selected:
+            self.flip()
+
+    def is_selected(self):
+        return self.selected
+
+
 class InputBox:
     # Modified from https://stackoverflow.com/questions/46390231/how-can-i-create-a-text-input-box-with-pygame
     def __init__(self, x, y, w, h, text="", auto_active=False):
