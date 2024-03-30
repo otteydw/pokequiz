@@ -1,7 +1,7 @@
 import pygame
 
 pygame.init()
-WIDTH, HEIGHT = 800, 800
+WIDTH, HEIGHT = 1000, 800
 
 BLACK = pygame.Color("black")
 GREEN = pygame.Color("green")
