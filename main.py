@@ -5,7 +5,7 @@ import pygame
 
 from pokequiz import helpers
 from pokequiz.constants import BACKGROUND_COLOR, FONT, GREEN, HEIGHT, RED, WHITE, WIDTH
-from pokequiz.gui import Button, ButtonImage
+from pokequiz.gui import Button, ButtonImage, InfoBox
 from pokequiz.helpers import POKEMON_TYPES
 
 FPS = 60
@@ -94,11 +94,16 @@ def type_quiz(WIN, question_count=10, hints=True, generation=0):
             WIN.fill(BACKGROUND_COLOR)
             WIN.blit(pokemon_name_field, (10, 10))
 
-            # Score
-            score_field = FONT.render(str(correct), True, WHITE, GREEN)
-            score_field_rect = pygame.Rect(WIDTH - 100, 0, 100, score_field.get_height())
-            pygame.draw.rect(WIN, pygame.Color("green"), score_field_rect)
-            WIN.blit(score_field, (WIDTH - score_field.get_width() - 10, 0))
+            SCORE_FIELD_WIDTH, SCORE_FIELD_HEIGHT = 120, 60
+            score_field = InfoBox(
+                size=(SCORE_FIELD_WIDTH, SCORE_FIELD_HEIGHT),
+                text=str(correct),
+                pos=(WIDTH - SCORE_FIELD_WIDTH, 0),
+                textColor=WHITE,
+                bgColor=GREEN,
+                center_text=True,
+            )
+            score_field.render(WIN)
 
             POKEMON_IMAGE_X = (WIDTH - pokemon_image.get_width()) / 2
             POKEMON_IMAGE_Y = 15
@@ -139,8 +144,8 @@ def type_quiz(WIN, question_count=10, hints=True, generation=0):
 
 def main():
     run = True
-    game_state = GameState.MAIN_MENU
-    # game_state = GameState.TYPE_QUIZ
+    # game_state = GameState.MAIN_MENU
+    game_state = GameState.TYPE_QUIZ
 
     while run:
         events = pygame.event.get()

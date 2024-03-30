@@ -141,3 +141,27 @@ class InputBox:
         screen.blit(self.txt_surface, (self.rect.x + 5, self.rect.y + 5))
         # Blit the rect.
         pygame.draw.rect(screen, self.color, self.rect, 2)
+
+
+class InfoBox:
+    def __init__(self, size, text, pos, bgColor=WHITE, textColor=BLACK, center_text=False):
+        self.pos = pos
+        self.size = size
+        self.text = text
+        self.center_text = center_text
+        self.bgColor = bgColor
+        self.textColor = textColor
+        self.font = pygame.font.Font(pygame.font.get_default_font(), self.size[1])
+
+    def render(self, window):
+        self.textSurf = self.font.render(f"{self.text}", True, self.textColor)
+        self.button = pygame.Surface((self.size[0], self.size[1])).convert()
+        self.button.fill(self.bgColor)
+
+        window.blit(self.button, (self.pos[0], self.pos[1]))
+        if self.center_text:
+            text_width, _ = self.textSurf.get_size()
+            text_position = (self.pos[0] + (self.size[0] - text_width) // 2, self.pos[1] + 2)
+        else:
+            text_position = (self.pos[0] + 1, self.pos[1] + 5)
+        window.blit(self.textSurf, text_position)
