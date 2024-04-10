@@ -14,8 +14,8 @@ from pokequiz.constants import (
     WHITE,
     WIDTH,
 )
-from pokequiz.gui import Button, ButtonImage, InfoBox
-from pokequiz.helpers import POKEMON_TYPES
+from pokequiz.gui import Button, ButtonImage, InfoBox, InputBoxWithLabel
+from pokequiz.helpers import POKEMON_TYPES, str2bool
 
 FPS = 60
 
@@ -32,6 +32,65 @@ class GameState(Enum):
 def draw_text(text, font, text_color, x, y):
     img = font.render(text, True, text_color)
     WIN.blit(img, (x, y))
+
+
+def options_menu(WIN, quiz):
+    run = True
+    clock = pygame.time.Clock()
+
+    OPTION_HEIGHT = 40
+    OPTION_X_POS = 80
+    OPTION_Y_POS = 40
+    OPTION_Y_BUFFER = 5
+    inputbox_number_of_questions = InputBoxWithLabel(
+        OPTION_X_POS, OPTION_Y_POS, 40, OPTION_HEIGHT, label="Number of questions:", initial_value="100"
+    )
+    inputbox_hints = InputBoxWithLabel(
+        OPTION_X_POS,
+        OPTION_Y_POS + (OPTION_HEIGHT + OPTION_Y_BUFFER),
+        40,
+        OPTION_HEIGHT,
+        label="Hints:",
+        initial_value="True",
+    )
+    inputbox_generation = InputBoxWithLabel(
+        OPTION_X_POS,
+        OPTION_Y_POS + 2 * (OPTION_HEIGHT + OPTION_Y_BUFFER),
+        40,
+        OPTION_HEIGHT,
+        label="Generation:",
+        initial_value="0",
+    )
+
+    START_BUTTON_SIZE = (400, 50)
+    START_BUTTON_POS_X = (WIDTH - START_BUTTON_SIZE[0]) // 2
+    START_BUTTON_POS_Y = 4 * (OPTION_HEIGHT + 2 * OPTION_Y_BUFFER)
+    button_start = Button(START_BUTTON_SIZE, "Start", [START_BUTTON_POS_X, START_BUTTON_POS_Y], center_text=True)
+
+    while run:
+        events = pygame.event.get()
+        WIN.fill(BACKGROUND_COLOR)
+
+        button_start.render(WIN)
+
+        for event in events:
+            if event.type == pygame.QUIT:
+                return False
+            inputbox_number_of_questions.handle_event(event)
+            inputbox_hints.handle_event(event)
+            inputbox_generation.handle_event(event)
+            if button_start.clicked(events):
+                question_count = int(inputbox_number_of_questions.get_value())
+                hints = str2bool(inputbox_hints.get_value())
+                generation = int(inputbox_generation.get_value())
+                run = quiz(WIN, question_count=question_count, hints=hints, generation=generation)
+        clock.tick(FPS)
+        inputbox_number_of_questions.update_and_draw(WIN)
+        inputbox_hints.update_and_draw(WIN)
+        inputbox_generation.update_and_draw(WIN)
+        pygame.display.flip()
+
+    return True
 
 
 def type_quiz(WIN, question_count=10, hints=True, generation=0):
@@ -76,8 +135,6 @@ def type_quiz(WIN, question_count=10, hints=True, generation=0):
             # hint_text = f"Hint: {pokemon_types}"
             hint_text = f"Hint: it has {len(pokemon_types)} {helpers.simple_pluralize(pokemon_types, 'type','types')}."
             pokemon_hint_field = FONT.render(hint_text, True, WHITE, BACKGROUND_COLOR)
-
-        # input_box1 = InputBox(20, 400, 140, FONT_HEIGHT + 10, auto_active=True)
 
         POKEMON_IMAGE_WIDTH = 250
         POKEMON_IMAGE_HEIGHT = 250
@@ -130,8 +187,6 @@ def type_quiz(WIN, question_count=10, hints=True, generation=0):
                 if button.clicked(events):
                     button.flip()
 
-            # input_box1.update()
-            # input_box1.draw(WIN)
             pygame.display.flip()
 
             selected_types = [button.text.lower() for button in type_buttons if button.is_selected()]
@@ -164,8 +219,8 @@ def type_quiz(WIN, question_count=10, hints=True, generation=0):
 
 def main():
     run = True
-    game_state = GameState.MAIN_MENU
-    # game_state = GameState.TYPE_QUIZ
+    # game_state = GameState.MAIN_MENU
+    game_state = GameState.TYPE_QUIZ
 
     while run:
         events = pygame.event.get()
@@ -208,7 +263,8 @@ def main():
                     print("Pokedex Quiz")
                     game_state = GameState.POKEDEX_QUIZ
             case GameState.TYPE_QUIZ:
-                run = type_quiz(WIN)
+                # run = type_quiz(WIN)
+                run = options_menu(WIN, type_quiz)
                 game_state = GameState.MAIN_MENU
             case _:
                 print("Unknown game state")

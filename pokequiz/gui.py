@@ -1,7 +1,7 @@
 import pygame
 
 # from pokequiz.constants import WHITE, BLACK
-from pokequiz.constants import BLACK, FONT, WHITE
+from pokequiz.constants import BLACK, WHITE
 
 COLOR_INACTIVE = pygame.Color("lightskyblue3")
 COLOR_ACTIVE = pygame.Color("dodgerblue2")
@@ -97,10 +97,13 @@ class ButtonImage:
 class InputBox:
     # Modified from https://stackoverflow.com/questions/46390231/how-can-i-create-a-text-input-box-with-pygame
     def __init__(self, x, y, w, h, text="", auto_active=False):
-        self.rect = pygame.Rect(x, y, w, h)
+        self.minimum_width = w
+        self.rect = pygame.Rect(x, y, self.minimum_width, h)
         self.active = auto_active
         self.color = COLOR_ACTIVE if self.active else COLOR_INACTIVE
         self.text = text
+        self.text_height = h - 5
+        self.font = pygame.font.Font(pygame.font.get_default_font(), self.text_height)
         self.update()
         # self.txt_surface = FONT.render(text, True, self.color)
 
@@ -131,9 +134,9 @@ class InputBox:
         return None
 
     def update(self):
-        self.txt_surface = FONT.render(self.text, True, self.color)
+        self.txt_surface = self.font.render(self.text, True, self.color)
         # Resize the box if the text is too long.
-        width = max(200, self.txt_surface.get_width() + 10)
+        width = max(self.minimum_width, self.txt_surface.get_width() + 10)
         self.rect.w = width
 
     def draw(self, screen):
@@ -141,6 +144,35 @@ class InputBox:
         screen.blit(self.txt_surface, (self.rect.x + 5, self.rect.y + 5))
         # Blit the rect.
         pygame.draw.rect(screen, self.color, self.rect, 2)
+
+    def update_and_draw(self, WIN):
+        self.update()
+        self.draw(WIN)
+
+    def get_value(self):
+        return self.text
+
+
+class InputBoxWithLabel(InputBox):
+    def __init__(self, x, y, w, h, label="", initial_value="", auto_active=False):
+        self.label = label
+        self.x = x
+        self.y = y
+        self.w = w
+        self.h = h
+        self.font = pygame.font.Font(pygame.font.get_default_font(), self.h)
+        self.label_image = self.font.render(self.label, True, BLACK)
+        horizontal_buffer = 5
+        input_box_x = self.x + self.label_image.get_width() + horizontal_buffer
+        input_box_y = self.y
+        super().__init__(input_box_x, input_box_y, w, h, text=initial_value, auto_active=auto_active)
+
+    def draw(self, WIN):
+        WIN.blit(self.label_image, (self.x, self.y))
+        super().draw(WIN)
+
+    # def update(self):
+    #     self.InputBox.update()
 
 
 class InfoBox:
