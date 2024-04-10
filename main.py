@@ -3,6 +3,7 @@ from enum import Enum, auto
 
 import pygame
 
+import ptext.ptext as ptext
 from pokequiz import helpers
 from pokequiz.constants import (
     BACKGROUND_COLOR,
@@ -148,14 +149,6 @@ def type_quiz(WIN, question_count=10, hints=True, generation=0):
                 if event.type == pygame.QUIT:
                     print("quit")
                     return False
-                    # run = False
-
-                # answer = input_box1.handle_event(event)
-                # if answer:
-                #     print(f"Answer was {answer}")
-                #     if answer.lower() == pokemon_name.lower():
-                #         print("Winner!")
-                #         correct += 1
 
             WIN.fill(BACKGROUND_COLOR)
             WIN.blit(pokemon_name_field, (10, 10))
@@ -217,10 +210,105 @@ def type_quiz(WIN, question_count=10, hints=True, generation=0):
     return True
 
 
+def pokedex_quiz(WIN, question_count=10, hints=True, generation=0):
+
+    clock = pygame.time.Clock()
+
+    inputbox_answer = InputBoxWithLabel(20, 300, 200, 40, label="Guess:", text_color=WHITE, always_active=True)
+    guess_button = Button((400, 100), "Guess", [50, 480], bgColor=RED, textColor=WHITE, center_text=True)
+
+    correct = 0
+    previous_pokemon = set()
+    pokemon = None
+    for question in range(question_count):
+        run = True
+        while pokemon is None or pokemon.id in previous_pokemon:
+            if generation == 0:
+                pokemon = helpers.random_pokemon()
+            else:
+                pokemon = helpers.random_pokemon_from_generation(generation)
+        previous_pokemon.add(pokemon.id)
+
+        pokemon_name = pokemon.name.replace("-", " ").lower()
+        pokemon_types = helpers.pokemon_types(pokemon)
+        pokedex_text = helpers.pokedex_text_entry(pokemon.id)
+
+        question_number_field = FONT.render(f"{question+1} / {question_count}", True, WHITE, BACKGROUND_COLOR)
+        if hints:
+            # hint_text = f"Hint: {pokemon_name}"
+            pokedex_text += f"\n\nTypes: {helpers.list_as_string(pokemon_types)}"
+        while run:
+            events = pygame.event.get()
+
+            for event in events:
+                if event.type == pygame.QUIT:
+                    print("quit")
+                    return False
+                answer = inputbox_answer.handle_event(event)
+                if answer:
+                    break
+
+            WIN.fill(BACKGROUND_COLOR)
+            WIN.blit(question_number_field, (10, 10))
+
+            SCORE_FIELD_WIDTH, SCORE_FIELD_HEIGHT = 120, 60
+            score_field = InfoBox(
+                size=(SCORE_FIELD_WIDTH, SCORE_FIELD_HEIGHT),
+                text=str(correct),
+                pos=(WIDTH - SCORE_FIELD_WIDTH, 0),
+                textColor=WHITE,
+                bgColor=GREEN,
+                center_text=True,
+            )
+            score_field.render(WIN)
+
+            ptext.draw(pokedex_text, midtop=(WIDTH // 2, 100), width=int(WIDTH * 0.8), fontsize=40, align="left")
+
+            inputbox_answer.update_and_draw(WIN)
+            guess_button.render(WIN)
+
+            pygame.display.flip()
+
+            if answer or guess_button.clicked(events):
+                answer = answer if answer else inputbox_answer.get_value().lower()
+                if answer == pokemon_name:
+                    correct += 1
+                else:
+                    ptext.draw(
+                        f"Incorrect!\nCorrect answer is {pokemon_name.title()}",
+                        midtop=(WIDTH // 2, 350),
+                        width=int(WIDTH * 0.8),
+                        fontsize=60,
+                        color=WHITE,
+                        background=BLACK,
+                    )
+                    pygame.display.flip()
+                    pygame.time.wait(1500)
+                inputbox_answer.reset()
+                run = False
+
+            clock.tick(FPS)
+
+    # Display score at the end
+    popup = InfoBox(
+        size=(int(WIDTH * 0.75), 40),
+        text=f"You got {correct} / {question_count} correct! ({round(100*correct/question_count)}%)",
+        pos=(int(WIDTH * 0.125), HEIGHT // 4),
+        textColor=WHITE,
+        bgColor=BLACK,
+        center_text=True,
+    )
+    popup.render(WIN)
+    pygame.display.flip()
+    pygame.time.wait(5000)
+    return True
+
+
 def main():
     run = True
     game_state = GameState.MAIN_MENU
     # game_state = GameState.TYPE_QUIZ
+    # game_state = GameState.POKEDEX_QUIZ
 
     while run:
         events = pygame.event.get()
@@ -229,11 +317,11 @@ def main():
             if event.type == pygame.QUIT:
                 run = False
 
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_SPACE:
-                    # print("Paused!")
-                    # game_paused = True
-                    pass
+            # if event.type == pygame.KEYDOWN:
+            #     if event.key == pygame.K_SPACE:
+            #         print("Paused!")
+            #         game_paused = True
+            #         pass
 
             # if event.type == pygame.MOUSEBUTTONDOWN:
             #     pos = pygame.mouse.get_pos()
@@ -248,27 +336,23 @@ def main():
                 button_type_quiz.render(WIN)
 
                 button_pokedex_quiz = Button(
-                    MENU_BUTTON_SIZE, "Pokedex Quiz", [MENU_BUTTON_POS_X, 110], center_text=True
+                    MENU_BUTTON_SIZE, "Pokédex Quiz", [MENU_BUTTON_POS_X, 110], center_text=True
                 )
                 button_pokedex_quiz.render(WIN)
 
-                # button_pokedex_rock = ButtonImage((100,20), "rock", helpers.type_sprite('rock'), [MENU_BUTTON_POS_X, 170])
-                # button_pokedex_rock.render(WIN)
-
                 if button_type_quiz.clicked(events):
-                    print("Type Quiz")
                     game_state = GameState.TYPE_QUIZ
-
-                if button_pokedex_quiz.clicked(events):
-                    print("Pokedex Quiz")
+                elif button_pokedex_quiz.clicked(events):
                     game_state = GameState.POKEDEX_QUIZ
+
             case GameState.TYPE_QUIZ:
-                # run = type_quiz(WIN)
                 run = options_menu(WIN, type_quiz)
                 game_state = GameState.MAIN_MENU
+            case GameState.POKEDEX_QUIZ:
+                run = options_menu(WIN, pokedex_quiz)
+                game_state = GameState.MAIN_MENU
             case _:
-                print("Unknown game state")
-                print(game_state)
+                print(f"Unknown game state {game_state}")
                 sys.exit(1)
 
         pygame.display.update()

@@ -210,12 +210,14 @@ def pokedex_text_entry(pokemon_name_or_id, language="en"):
         # inspect(flavor_text_entry.language)
         if flavor_text_entry.language.name == language:
             flavor_text = flavor_text_entry.flavor_text.replace("\n", " ").replace("\x0c", " ")
-            # print(mon.flavor_text_entries[0].language.name)
-            # print(mon.name)
-            # print(mon.name.upper())
-            flavor_text = flavor_text.replace(mon.name.upper(), "BLANK")
-            flavor_text = flavor_text.replace(mon.name.capitalize(), "BLANK")
-            flavor_text = flavor_text.replace(mon.name, "BLANK")
+
+            for substring in [mon.name.upper(), mon.name.capitalize(), mon.name]:
+                flavor_text = flavor_text.replace(substring, "_____")
+
+            for substring in ["POKé BALL", "POKéMON"]:
+                flavor_text = flavor_text.replace(substring, substring.title())
+
+            flavor_text = flavor_text.replace(substring, "_____")
             return flavor_text
 
 
@@ -253,5 +255,12 @@ def type_sprite(type_name):
     return type_image_file
 
 
-def str2bool(v):
-    return v.lower() in ("yes", "true", "t", "1")
+def str2bool(s):
+    return s.lower() in ("yes", "true", "t", "1")
+
+
+def list_as_string(lst):
+    if len(lst) == 2:
+        return " and ".join(lst)
+    else:
+        return lst[0]
