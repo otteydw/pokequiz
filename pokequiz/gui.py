@@ -96,34 +96,41 @@ class ButtonImage:
 
 class InputBox:
     # Modified from https://stackoverflow.com/questions/46390231/how-can-i-create-a-text-input-box-with-pygame
-    def __init__(self, x, y, w, h, text="", auto_active=False):
+    def __init__(self, x, y, w, h, initial_value="", auto_active=False, always_active=False):
         self.minimum_width = w
         self.rect = pygame.Rect(x, y, self.minimum_width, h)
-        self.active = auto_active
+        self.active = auto_active or always_active
+        self.always_active = always_active
         self.color = COLOR_ACTIVE if self.active else COLOR_INACTIVE
-        self.text = text
+        self.initial_value = initial_value
+        self.reset()
         self.text_height = h - 5
         self.font = pygame.font.Font(pygame.font.get_default_font(), self.text_height)
         self.update()
         # self.txt_surface = FONT.render(text, True, self.color)
 
+    def reset(self):
+        self.text = self.initial_value
+        self.update()
+
     def handle_event(self, event):
         if event.type == pygame.MOUSEBUTTONDOWN:
             # If the user clicked on the input_box rect.
-            if self.rect.collidepoint(event.pos):
-                # Toggle the active variable.
-                self.active = not self.active
-            else:
-                self.active = False
-            # Change the current color of the input box.
-            self.color = COLOR_ACTIVE if self.active else COLOR_INACTIVE
+            if not self.always_active:
+                if self.rect.collidepoint(event.pos):
+                    # Toggle the active variable.
+                    self.active = not self.active
+                else:
+                    self.active = False
+                # Change the current color of the input box.
+                self.color = COLOR_ACTIVE if self.active else COLOR_INACTIVE
+
         if event.type == pygame.KEYDOWN:
             if self.active:
                 if event.key == pygame.K_RETURN:
                     print(self.text)
                     current_text = self.text
-                    self.text = ""
-                    self.update()
+                    self.reset()
                     return current_text
                 elif event.key == pygame.K_BACKSPACE:
                     self.text = self.text[:-1]
@@ -154,25 +161,32 @@ class InputBox:
 
 
 class InputBoxWithLabel(InputBox):
-    def __init__(self, x, y, w, h, label="", initial_value="", auto_active=False):
+    def __init__(
+        self, x, y, w, h, label="", initial_value="", auto_active=False, always_active=False, text_color=BLACK
+    ):
         self.label = label
         self.x = x
         self.y = y
         self.w = w
         self.h = h
         self.font = pygame.font.Font(pygame.font.get_default_font(), self.h)
-        self.label_image = self.font.render(self.label, True, BLACK)
+        self.label_image = self.font.render(self.label, True, text_color)
         horizontal_buffer = 5
         input_box_x = self.x + self.label_image.get_width() + horizontal_buffer
         input_box_y = self.y
-        super().__init__(input_box_x, input_box_y, w, h, text=initial_value, auto_active=auto_active)
+        super().__init__(
+            input_box_x,
+            input_box_y,
+            w,
+            h,
+            initial_value=initial_value,
+            auto_active=auto_active,
+            always_active=always_active,
+        )
 
     def draw(self, WIN):
         WIN.blit(self.label_image, (self.x, self.y))
         super().draw(WIN)
-
-    # def update(self):
-    #     self.InputBox.update()
 
 
 class InfoBox:
