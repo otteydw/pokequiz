@@ -43,7 +43,7 @@ def options_menu(WIN, quiz):
     OPTION_Y_POS = 40
     OPTION_Y_BUFFER = 5
     inputbox_number_of_questions = InputBoxWithLabel(
-        OPTION_X_POS, OPTION_Y_POS, 40, OPTION_HEIGHT, label="Number of questions:", initial_value="100"
+        OPTION_X_POS, OPTION_Y_POS, 40, OPTION_HEIGHT, label="Number of questions:", initial_value="10"
     )
     inputbox_hints = InputBoxWithLabel(
         OPTION_X_POS,
@@ -219,8 +219,8 @@ def type_quiz(WIN, question_count=10, hints=True, generation=0):
 
 def main():
     run = True
-    # game_state = GameState.MAIN_MENU
-    game_state = GameState.TYPE_QUIZ
+    game_state = GameState.MAIN_MENU
+    # game_state = GameState.TYPE_QUIZ
 
     while run:
         events = pygame.event.get()
