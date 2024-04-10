@@ -251,3 +251,7 @@ def type_sprite(type_name):
 
     type_image_file = Path(PurePath(TYPE_IMAGES_DIRECTORY, type_name + ".png"))
     return type_image_file
+
+
+def str2bool(v):
+    return v.lower() in ("yes", "true", "t", "1")
