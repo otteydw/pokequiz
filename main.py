@@ -187,6 +187,17 @@ def type_quiz(WIN, question_count=10, hints=True, generation=0):
             if guess_button.clicked(events):
                 if selected_types == pokemon_types:
                     correct += 1
+                else:
+                    ptext.draw(
+                        f"Incorrect!\nCorrect types are {helpers.list_as_string(pokemon_types)}",
+                        midtop=(WIDTH // 2, 350),
+                        width=int(WIDTH * 0.8),
+                        fontsize=60,
+                        color=WHITE,
+                        background=BLACK,
+                    )
+                    pygame.display.flip()
+                    pygame.time.wait(2000)
                 for button in type_buttons:
                     button.deselect()
                     # button.render(WIN)
